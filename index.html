@@ -1,10 +1,9 @@
-<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
-  <title>My LIFF app</title>
-  <link rel="stylesheet" href="css/style.css" media="all">
+  <title>My LIFF App</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <p id="os"><b>OS:</b> </p>
@@ -36,15 +35,21 @@
   <button id="btnLogOut" onclick="logOut()">Log Out</button>
   <button id="btnClose" onclick="closed()">Close</button>
 
-  <!-- <script src="js/vconsole.min.js"></script> -->
-  <!-- <script>
+  <script src="js/vconsole.min.js"></script>
+  <script>
     var vConsole = new VConsole()
     console.log("Hello World!")
-  </script> -->
+  </script>
 
   <script src="https://static.line-scdn.net/liff/edge/versions/2.5.0/sdk.js"></script>
   <script>
     function createUniversalLink() {
+      const link1 = liff.permanentLink.createUrl()
+      document.getElementById("universalLink1").append(link1)
+
+      liff.permanentLink.setExtraQueryParam('param=9')
+      const link2 = liff.permanentLink.createUrl()
+      document.getElementById("universalLink2").append(link2)
     }
 
     async function shareMsg() {
@@ -62,19 +67,19 @@
     }
 
     function closed() {
-      //liff.closeWindow()
+      liff.closeWindow()
     }
 
     async function scanCode() {
       const result = await liff.scanCode()
       document.getElementById("scanCode").append(result.value)
     }
-
+    
     function openWindow() {
       liff.openWindow({
         url: "https://line.me",
         external: true
-      })      
+      })
     }
 
     async function getFriendship() {
@@ -82,7 +87,7 @@
       document.getElementById("friendship").append(friend.friendFlag)
       if (!friend.friendFlag) {
         if (confirm("คุณยังไม่ได้เพิ่ม Bot เป็นเพื่อน จะเพิ่มเลยไหม?")) {
-          window.location = "https://line.me/R/ti/p/@637hqnct"
+          window.location = "https://line.me/R/ti/p/@YOUR-BOT-ID"
         }
       }
     }
@@ -91,21 +96,23 @@
       if (liff.getContext().type !== "none") {
         await liff.sendMessages([
           {
-           "type": "sticker",
+            "type": "sticker",
             "stickerId": 1,
             "packageId": 1
           }
-          ])
-          alert("Message sent")
+        ])
+        alert("Message sent")
       }
     }
 
     function getContext() {
-      document.getElementById("type").append(liff.getContext().type)
-      document.getElementById("viewType").append(liff.getContext().viewType)
-      document.getElementById("utouId").append(liff.getContext().utouId)
-      document.getElementById("roomId").append(liff.getContext().roomId)
-      document.getElementById("groupId").append(liff.getContext().groupId)
+      if (liff.getContext() != null) {
+        document.getElementById("type").append(liff.getContext().type)
+        document.getElementById("viewType").append(liff.getContext().viewType)
+        document.getElementById("utouId").append(liff.getContext().utouId)
+        document.getElementById("roomId").append(liff.getContext().roomId)
+        document.getElementById("groupId").append(liff.getContext().groupId)
+      }
     }
 
     async function getUserProfile() {
@@ -116,7 +123,7 @@
       document.getElementById("displayName").append(profile.displayName)
       document.getElementById("decodedIDToken").append(liff.getDecodedIDToken().email)
     }
-
+    
     function getEnvironment() {
       document.getElementById("os").append(liff.getOS())
       document.getElementById("language").append(liff.getLanguage())
@@ -140,7 +147,7 @@
           getUserProfile()
           getContext()
           getFriendship()
-          // createUniversalLink()
+          createUniversalLink()
         } else {
           liff.login()
         }
